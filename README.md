@@ -10,13 +10,13 @@ import SwiftlyAttributedStrings
 // ...
 @IBOutlet weak var label: UILabel!
 // ...
-label.attributedText = BNUnderline() { BNColor(.blue) { "Hello, " + BNFont(.boldSystemFont(ofSize: 18)) { "World" } + "!" } }.attributedString()
+label.attributedText = Underline() { Color(.blue) { "Hello, " + Font(.boldSystemFont(ofSize: 18)) { "World" } + "!" } }.attributedString
 ```
 
 <img src="/1.jpg?raw=true" width="132">
 
 ## How to create your own string attributes
-All you need to do is subclass ```BNNode``` and create one ```init()``` that takes an array of  ```BNStringNode``` and another one that takes a closure ```() -> BNStringNode```. These initializers will have to set the ```params``` dictionary accordingly (access [Character Attributes](https://developer.apple.com/reference/foundation/nsattributedstring/character_attributes) for more information).
+All you need to do is subclass ```Node``` and create one ```init()``` that takes an array of  ```StringNode``` and another one that takes a closure ```() -> StringNode```. These initializers will have to set the ```params``` dictionary accordingly (access [Character Attributes](https://developer.apple.com/reference/foundation/nsattributedstring/character_attributes) for more information).
 
 ### Example
 
@@ -24,22 +24,22 @@ All you need to do is subclass ```BNNode``` and create one ```init()``` that tak
 import UIKit
 import SwiftlyAttributedStrings
 
-class Kern: BNNode {
+class Kern: Node {
     
-    init(_ kern: Float = 0, nodes: [BNStringNode]) {
-        var params: [String: Any] = [:]
-        if kern >= 0 { params[NSKernAttributeName] = kern }
+    init(_ kern: Float = 0, nodes: [StringNode]) {
+        var params: [NSAttributedStringKey: Any] = [:]
+        if kern >= 0 { params[.kern] = kern }
         super.init(params: params, nodes: nodes)
     }
     
-    convenience init(_ kern: Float = 0, closure: () -> BNStringNode) {
+    convenience init(_ kern: Float = 0, closure: () -> StringNode) {
         self.init(kern, nodes: [closure()])
     }
 }
 ```
 
 ```swift
-label.attributedText = Kern(5) { BNColor(.green) { "Hello, " } + BNColor(.blue) { "World!" } }.attributedString()
+label.attributedText = Kern(5) { Color(.green) { "Hello, " } + Color(.blue) { "World!" } }.attributedString
 ```
 
 <img src="/2.jpg?raw=true" width="182">
@@ -51,7 +51,7 @@ label.attributedText = Kern(5) { BNColor(.green) { "Hello, " } + BNColor(.blue) 
 Add this line to your `Podfile`:
 
 ```
-pod 'SwiftlyAttributedStrings', :git => 'https://github.com/fabio914/swiftly-attributed-strings.git', :tag => '0.0.1'
+pod 'SwiftlyAttributedStrings', :git => 'https://github.com/fabio914/swiftly-attributed-strings.git', :tag => '1.0.0'
 ``` 
 
 ### Carthage
@@ -59,11 +59,11 @@ pod 'SwiftlyAttributedStrings', :git => 'https://github.com/fabio914/swiftly-att
 Add this line to your `Cartfile`:
 
 ```
-github "fabio914/swiftly-attributed-strings" ~> 0.0
+github "fabio914/swiftly-attributed-strings" ~> 1.0
 ```
 
 ## Requirements
-Swift 3.1, iOS 9.3+
+Swift 4.0.3, iOS 9.3+
 
 ## License
 ```Swiftly Attributed Strings``` is released under the ```MIT``` license.

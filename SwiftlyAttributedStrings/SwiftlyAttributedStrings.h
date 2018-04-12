@@ -1,11 +1,3 @@
-//
-//  SwiftlyAttributedStrings.h
-//  SwiftlyAttributedStrings
-//
-//  Created by Fabio Dela Antonio on 2017-04-22.
-//  Copyright © 2017 bluenose. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 
 //! Project version number for SwiftlyAttributedStrings.

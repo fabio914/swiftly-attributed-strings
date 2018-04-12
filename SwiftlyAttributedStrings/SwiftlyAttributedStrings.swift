@@ -1,130 +1,59 @@
-//
-//  SwiftlyAttributedStrings.swift
-//  SwiftlyStrings
-//
-//  Created by Fabio Dela Antonio on 2017-04-22.
-//  Copyright © 2017 bluenose. All rights reserved.
-//
-
 import UIKit
 
-public protocol BNStringNode {
+public protocol StringNode {
 }
 
-extension String: BNStringNode {
+extension String: StringNode {
 }
 
-open class BNNode: BNStringNode {
+open class Node: StringNode {
     
-    public var params: [String: Any]
-    public var nodes: [BNStringNode]
+    public var params: [NSAttributedStringKey: Any]
+    public var nodes: [StringNode]
     
-    public init(params: [String: Any], nodes: [BNStringNode]) {
+    public init(params: [NSAttributedStringKey: Any], nodes: [StringNode]) {
         self.nodes = nodes
         self.params = params
     }
     
-    public convenience init(params: [String: Any], closure: () -> BNStringNode) {
+    public convenience init(params: [NSAttributedStringKey: Any], closure: () -> StringNode) {
         self.init(params: params, nodes: [closure()])
     }
 }
 
-public func +(lhs: BNStringNode, rhs: BNStringNode) -> BNNode {
-    return BNNode(params: [:], nodes: [lhs, rhs])
+public func +(lhs: StringNode, rhs: StringNode) -> Node {
+    return Node(params: [:], nodes: [lhs, rhs])
 }
 
-fileprivate class BNStack<T> {
+public enum StringNodeError: Error {
+    case invalidNodeInstance
+}
+
+public extension StringNode {
     
-    private var array: Array<T> = []
-    
-    func push(_ element: T) {
-        array.append(element)
-    }
-    
-    func pop() -> T? {
+    public func attributedString(context: [NSAttributedStringKey: Any] = [:]) throws -> NSAttributedString {
         
-        if array.last != nil {
-            return array.removeLast()
-        }
-        return nil
-    }
-    
-    func top() -> T? {
-        return array.last
-    }
-}
-
-public enum BNAttributedStringBuilderError: Error {
-    case InvalidNodeInstance
-}
-
-public class BNAttributedStringBuilder {
-    
-    private var contextStack: BNStack<[String: Any]> = BNStack()
-    private var rootNode: BNStringNode
-    
-    init(rootNode: BNStringNode) {
-        self.rootNode = rootNode
-    }
-    
-    public class func build(_ rootNode: BNStringNode) throws -> NSAttributedString {
-        return try BNAttributedStringBuilder(rootNode: rootNode).attributedString()
-    }
-    
-    private func attributedString() throws -> NSAttributedString {
-        contextStack = BNStack()
-        contextStack.push([:])
-        let result = try attributedString(forNode: rootNode)
-        _ = contextStack.pop()
-        return result
-    }
-    
-    private func attributedString(forNode node: BNStringNode) throws -> NSAttributedString {
-        
-        if let string = node as? String {
+        if let string = self as? String {
             
-            return NSAttributedString(string: string, attributes: contextStack.top())
+            return NSAttributedString(string: string, attributes: context)
         }
             
-        else if let node = node as? BNNode {
+        else if let node = self as? Node {
             
             let localAttributed = NSMutableAttributedString()
-            let currentAttributes = contextStack.top() ?? [:]
-            
-            contextStack.push(mergeAttributes(currentAttributes, node.params))
-            
-            for node in node.nodes {
-                
-                localAttributed.append(try attributedString(forNode: node))
-            }
-            
-            _ = contextStack.pop()
-            
+            let currentContext = context.merging(node.params, uniquingKeysWith: { $1 })
+            try node.nodes.map({ try $0.attributedString(context: currentContext) }).forEach(localAttributed.append)
             return NSAttributedString(attributedString: localAttributed)
         }
             
         else {
             
-            throw BNAttributedStringBuilderError.InvalidNodeInstance
+            throw StringNodeError.invalidNodeInstance
         }
     }
     
-    private func mergeAttributes(_ first: [String: Any], _ second: [String: Any]) -> [String: Any] {
-        
-        var merge = first
-        
-        for key in second.keys {
-            merge[key] = second[key]
-        }
-        
-        return merge
-    }
-}
-
-public extension BNStringNode {
-    
-    public func attributedString() -> NSAttributedString? {
-        return try? BNAttributedStringBuilder.build(self)
+    public var attributedString: NSAttributedString? {
+        return try? attributedString()
     }
 }
 
@@ -132,37 +61,37 @@ public extension BNStringNode {
 // String Attribute Classes
 //
 
-public class BNFont: BNNode {
+public class Font: Node {
     
-    public init(_ font: UIFont?, nodes: [BNStringNode]) {
-        var params: [String: Any] = [:]
-        if let font = font { params[NSFontAttributeName] = font }
+    public init(_ font: UIFont?, nodes: [StringNode]) {
+        var params: [NSAttributedStringKey: Any] = [:]
+        if let font = font { params[.font] = font }
         super.init(params: params, nodes: nodes)
     }
     
-    public convenience init(_ font: UIFont?, closure: () -> BNStringNode) {
+    public convenience init(_ font: UIFont?, closure: () -> StringNode) {
         self.init(font, nodes: [closure()])
     }
 }
 
-public class BNColor: BNNode {
+public class Color: Node {
     
-    public init(_ color: UIColor, nodes: [BNStringNode]) {
-        super.init(params: [NSForegroundColorAttributeName: color], nodes: nodes)
+    public init(_ color: UIColor, nodes: [StringNode]) {
+        super.init(params: [.foregroundColor: color], nodes: nodes)
     }
     
-    public convenience init(_ color: UIColor, closure: () -> BNStringNode) {
+    public convenience init(_ color: UIColor, closure: () -> StringNode) {
         self.init(color, nodes: [closure()])
     }
 }
 
-public class BNUnderline: BNNode {
+public class Underline: Node {
     
-    public init(_ style: NSUnderlineStyle = .styleSingle, nodes: [BNStringNode]) {
-        super.init(params: [NSUnderlineStyleAttributeName: style.rawValue], nodes: nodes)
+    public init(_ style: NSUnderlineStyle = .styleSingle, nodes: [StringNode]) {
+        super.init(params: [.underlineStyle: style.rawValue], nodes: nodes)
     }
     
-    public convenience init(_ style: NSUnderlineStyle = .styleSingle, closure: () -> BNStringNode) {
+    public convenience init(_ style: NSUnderlineStyle = .styleSingle, closure: () -> StringNode) {
         self.init(style, nodes: [closure()])
     }
 }

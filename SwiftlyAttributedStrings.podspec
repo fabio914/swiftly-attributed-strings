@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SwiftlyAttributedStrings"
-  s.version      = "0.0.1"
+  s.version      = "1.0.0"
   s.summary      = "Harness the power of Swift syntax to swiftly create Attributed Strings."
   s.description  = "Swiftly Attributed Strings uses most of the Swift syntactic sugar to provide an easier way to instantiate NSAttributedStrings"
   s.homepage     = "https://github.com/fabio914/swiftly-attributed-strings"
@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/fabio914/swiftly-attributed-strings.git", :tag => "#{s.version}" }
 
   s.source_files  = "SwiftlyAttributedStrings", "SwiftlyAttributedStrings/**/*.{h,m,swift}"
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3' }
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4' }
 
 end
