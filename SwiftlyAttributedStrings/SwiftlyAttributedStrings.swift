@@ -8,15 +8,15 @@ extension String: StringNode {
 
 open class Node: StringNode {
     
-    public var params: [NSAttributedStringKey: Any]
+    public var params: [NSAttributedString.Key: Any]
     public var nodes: [StringNode]
     
-    public init(params: [NSAttributedStringKey: Any], nodes: [StringNode]) {
+    public init(params: [NSAttributedString.Key: Any], nodes: [StringNode]) {
         self.nodes = nodes
         self.params = params
     }
     
-    public convenience init(params: [NSAttributedStringKey: Any], closure: () -> StringNode) {
+    public convenience init(params: [NSAttributedString.Key: Any], closure: () -> StringNode) {
         self.init(params: params, nodes: [closure()])
     }
 }
@@ -31,7 +31,7 @@ public enum StringNodeError: Error {
 
 public extension StringNode {
     
-    public func attributedString(context: [NSAttributedStringKey: Any] = [:]) throws -> NSAttributedString {
+    func attributedString(context: [NSAttributedString.Key: Any] = [:]) throws -> NSAttributedString {
         
         if let string = self as? String {
             
@@ -52,7 +52,7 @@ public extension StringNode {
         }
     }
     
-    public var attributedString: NSAttributedString? {
+    var attributedString: NSAttributedString? {
         return try? attributedString()
     }
 }
@@ -64,7 +64,7 @@ public extension StringNode {
 public class Font: Node {
     
     public init(_ font: UIFont?, nodes: [StringNode]) {
-        var params: [NSAttributedStringKey: Any] = [:]
+        var params: [NSAttributedString.Key: Any] = [:]
         if let font = font { params[.font] = font }
         super.init(params: params, nodes: nodes)
     }
@@ -87,11 +87,11 @@ public class Color: Node {
 
 public class Underline: Node {
     
-    public init(_ style: NSUnderlineStyle = .styleSingle, nodes: [StringNode]) {
+    public init(_ style: NSUnderlineStyle = NSUnderlineStyle.single, nodes: [StringNode]) {
         super.init(params: [.underlineStyle: style.rawValue], nodes: nodes)
     }
     
-    public convenience init(_ style: NSUnderlineStyle = .styleSingle, closure: () -> StringNode) {
+    public convenience init(_ style: NSUnderlineStyle = NSUnderlineStyle.single, closure: () -> StringNode) {
         self.init(style, nodes: [closure()])
     }
 }

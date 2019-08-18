@@ -27,7 +27,7 @@ import SwiftlyAttributedStrings
 class Kern: Node {
     
     init(_ kern: Float = 0, nodes: [StringNode]) {
-        var params: [NSAttributedStringKey: Any] = [:]
+        var params: [NSAttributedString.Key: Any] = [:]
         if kern >= 0 { params[.kern] = kern }
         super.init(params: params, nodes: nodes)
     }
@@ -51,7 +51,7 @@ label.attributedText = Kern(5) { Color(.green) { "Hello, " } + Color(.blue) { "W
 Add this line to your `Podfile`:
 
 ```
-pod 'SwiftlyAttributedStrings', :git => 'https://github.com/fabio914/swiftly-attributed-strings.git', :tag => '1.0.0'
+pod 'SwiftlyAttributedStrings', :git => 'https://github.com/fabio914/swiftly-attributed-strings.git', :tag => '2.0.0'
 ``` 
 
 ### Carthage
@@ -59,11 +59,11 @@ pod 'SwiftlyAttributedStrings', :git => 'https://github.com/fabio914/swiftly-att
 Add this line to your `Cartfile`:
 
 ```
-github "fabio914/swiftly-attributed-strings" ~> 1.0
+github "fabio914/swiftly-attributed-strings" ~> 2.0
 ```
 
 ## Requirements
-Swift 4.0.3, iOS 9.3+
+Swift 5, iOS 10.3+
 
 ## License
 ```Swiftly Attributed Strings``` is released under the ```MIT``` license.
