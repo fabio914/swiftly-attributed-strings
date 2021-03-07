@@ -1,5 +1,4 @@
 # Swiftly Attributed Strings
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) 
 
 "Swiftly Attributed Strings" uses most of the Swift syntactic sugar to provide an easier way to instantiate NSAttributedStrings.
 
@@ -16,6 +15,7 @@ label.attributedText = Underline() { Color(.blue) { "Hello, " + Font(.boldSystem
 <img src="/1.jpg?raw=true" width="132">
 
 ## How to create your own string attributes
+
 All you need to do is subclass ```Node``` and create one ```init()``` that takes an array of  ```StringNode``` and another one that takes a closure ```() -> StringNode```. These initializers will have to set the ```params``` dictionary accordingly (access [Character Attributes](https://developer.apple.com/reference/foundation/nsattributedstring/character_attributes) for more information).
 
 ### Example
@@ -46,26 +46,16 @@ label.attributedText = Kern(5) { Color(.green) { "Hello, " } + Color(.blue) { "W
 
 ## How to install
 
-### CocoaPods
+### Swift Package Manager
 
-Add this line to your `Podfile`:
-
-```
-pod 'SwiftlyAttributedStrings', :git => 'https://github.com/fabio914/swiftly-attributed-strings.git', :tag => '2.0.0'
-``` 
-
-### Carthage
-
-Add this line to your `Cartfile`:
-
-```
-github "fabio914/swiftly-attributed-strings" ~> 2.0
+```swift
+.package(url: "https://github.com/fabio914/swiftly-attributed-strings.git", from: "3.0.0"),
 ```
 
 ## Requirements
-Swift 5, iOS 10.3+
+
+Swift 5.3
 
 ## License
+
 ```Swiftly Attributed Strings``` is released under the ```MIT``` license.
-
-
